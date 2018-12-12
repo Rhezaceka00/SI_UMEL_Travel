@@ -15,7 +15,7 @@ class Pesan {
     ArrayList Wisata = new ArrayList();
     ArrayList WisataHarian = new ArrayList();
     ArrayList Ziarah = new ArrayList();
-    
+
     Connection conn = new Koneksi().connect();
 
 //    String[][] wisata = {{"", "Bali", "Lombok", "Danau Toba",},
@@ -33,7 +33,7 @@ class Pesan {
 
     void init() {
         String sql = "";
-        
+
         //cara kConnection conn = new Koneksi().connect();onesi ke databasenya
         sql = "select * from wisata";
         try {
@@ -228,21 +228,22 @@ class Pesan {
         System.out.println("jumlah pembelian : " + org + " Kursi");
         System.out.println("Harga            : Rp." + harga + ",-/org");
         System.out.println("Total harga      : Rp." + tw + ",-");
-        
+
         String sql = "INSERT INTO rinciandana(`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?)";
-    try {    
-        PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, tujuan);
-        stat.setString(2, lama);
-        stat.setInt(3, org);
-        stat.setInt(4, harga);
-        stat.setInt(5, tw);
-        stat.setDouble(6, dsc);
-        stat.execute();
-    } catch (Exception e){}
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, tujuan);
+            stat.setString(2, lama);
+            stat.setInt(3, org);
+            stat.setInt(4, harga);
+            stat.setInt(5, tw);
+            stat.setDouble(6, dsc);
+            stat.execute();
+        } catch (Exception e) {
+        }
 //        System.out.println(e.toString());
     }
-    
+
     void ziarah() {
         switch (zrh) {
             case 0:
@@ -293,18 +294,19 @@ class Pesan {
         System.out.println("jumlah pembelian : " + org + " Kursi");
         System.out.println("Harga            : Rp." + harga + ",-/org");
         System.out.println("Total harga      : Rp." + tz + ",-");
-        
+
         String sql = "INSERT INTO rinciandana(`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?)";
-    try {    
-        PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, tujuan);
-        stat.setString(2, lama);
-        stat.setInt(3, org);
-        stat.setInt(4, harga);
-        stat.setInt(5, tw);
-        stat.setDouble(6, dsc);
-        stat.execute();
-    } catch (Exception e){}
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, tujuan);
+            stat.setString(2, lama);
+            stat.setInt(3, org);
+            stat.setInt(4, harga);
+            stat.setInt(5, tz);
+            stat.setDouble(6, dsc);
+            stat.execute();
+        } catch (Exception e) {
+        }
 
     }
 
@@ -372,22 +374,23 @@ class Pesan {
         System.out.println("\nRincian Daily Tour anda");
         System.out.println("----------------------------------");
         System.out.println("Perjalanan       : " + tujuan);
-        System.out.println("Lama perjalanan  : " + hari + " hari");
+        System.out.println("Lama perjalanan  : " + hari);
         System.out.println("jumlah pembelian : " + org + " Kursi");
         System.out.println("Harga            : Rp." + harga + ",-/hari");
         System.out.println("Total Pembayaran : Rp." + tc + ",-");
-        
+
         String sql = "INSERT INTO rinciandana(`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?)";
-    try {    
-        PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, tujuan);
-        stat.setString(2, lama);
-        stat.setInt(3, org);
-        stat.setInt(4, harga);
-        stat.setInt(5, tw);
-        stat.setDouble(6, dsc);
-        stat.execute();
-    } catch (Exception e){}
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, tujuan);
+            stat.setInt(2, hari);
+            stat.setInt(3, org);
+            stat.setInt(4, harga);
+            stat.setInt(5, tc);
+            stat.setDouble(6, dsc);
+            stat.execute();
+        } catch (Exception e) {
+        }
     }
 
     void hitung() {
@@ -401,12 +404,15 @@ class Pesan {
 
     void bayar() {
         while (metode) {
+            System.out.print("Nomor Transaksi : ");
+            String nt = in.next();
             System.out.print("Masukkan nama anda : ");
             String data = in.next();
+            System.out.println("\nNomor Transaksi " + nt + "\n");
             System.out.println("\nAtas nama " + data + "\n");
             System.out.print("Metode Pembayaran [Cash/Transfer] : ");
             String pembayaran = in.next();
-            if (pembayaran.equalsIgnoreCase("CASh") || pembayaran.equalsIgnoreCase("C") || pembayaran.equals("1")) {
+            if (pembayaran.equalsIgnoreCase("CASH") || pembayaran.equalsIgnoreCase("C") || pembayaran.equals("1")) {
                 while (bayar) {
                     System.out.print("\nmasukan saldo        = Rp.");
                     uang = in.nextInt();
@@ -432,6 +438,18 @@ class Pesan {
                 System.out.println("Silahkan Masukan Metode yang tersedia\n");
                 metode = true;
             }
+            
+            String sql = "INSERT INTO struk(`NomorTransaksi`,`Nama`,`Saldo`,`SisaCash`) value(?,?,?,?)";
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, nt);
+            stat.setString(2, data);
+            stat.setInt(3, uang);
+            stat.setInt(4, sisa);
+            stat.execute();
+        } catch (Exception e) {
+        }
+            
         }
     }
 }
