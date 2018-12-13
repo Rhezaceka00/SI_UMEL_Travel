@@ -2,14 +2,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 //import java.sql.SQLException;
-//import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-//import java.util.Date;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Scanner;
 //import javax.swing.JOptionPane;
 
 class Pesan {
-
+//deklrasi variable
     Scanner in = new Scanner(System.in);
     //awal mula membuat array list
     ArrayList Wisata = new ArrayList();
@@ -17,7 +18,6 @@ class Pesan {
     ArrayList Ziarah = new ArrayList();
 
     Connection conn = new Koneksi().connect();
-
 //    String[][] wisata = {{"", "Bali", "Lombok", "Danau Toba",},
 //    {"", "3H/2M", "4H/3M", "5H/4M"},
 //    {"", "1728000", "4250000", "3280000"}};
@@ -26,7 +26,8 @@ class Pesan {
 //    {"", "300000", "1500000", "2500000"}};
 //    String[][] custom = {{"", "Bali", "Lombok", "Danau Toba", "P.Komodo", "Belitung"},
 //    {"", "525000", "675000", "720000", "759000", "473000"}};
-    String tujuan, lama;
+    
+    String nt, tujuan, lama;
     int plh, wst, zrh, ctm, org, hari, harga, total, tw, tz, tc, tagihan1, tagihan2, tagihan3, uang, sisa;
     boolean bayar = true, metode = true, prsn = true, day = true;
     float dsc;
@@ -79,7 +80,7 @@ class Pesan {
         } catch (Exception e) {
         }
     }
-
+//menu
     void menu() {
         for (int i = 1; i <= 56; i++) {
             System.out.print("=");
@@ -100,7 +101,7 @@ class Pesan {
         String harga = "";
         String perhari = "";
         switch (plh) {
-            case 1:
+            case 1: //WISATA
                 System.out.println("\nDaftar Traveling Wisata Yang Tersedia");
                 for (int i = 1; i <= 41; i++) {
                     System.out.print("=");
@@ -123,7 +124,7 @@ class Pesan {
                 wst = in.nextInt();
                 wisata();
                 break;
-            case 2:
+            case 2: //ZIARAH
                 System.out.println("\n\t\t= Paket Tour Ziarah =");
                 for (int i = 1; i <= 56; i++) {
                     System.out.print("=");
@@ -146,7 +147,7 @@ class Pesan {
                 zrh = in.nextInt();
                 ziarah();
                 break;
-            case 3:
+            case 3: //CUSTOM HARIAN
                 System.out.println("\nPilihan Tujuan Yang Tersedia");
                 for (int i = 1; i <= 29; i++) {
                     System.out.print("=");
@@ -169,6 +170,7 @@ class Pesan {
                 ctm = in.nextInt();
                 custom();
                 break;
+                //TIDAK ADA YANG DIPILIH
             default:
                 System.out.println("Menu yang anda pilih tidak ada");
                 System.out.print("Masukan Menu Yng Tersedia : ");
@@ -181,6 +183,8 @@ class Pesan {
     void wisata() {
         switch (wst) {
             case 0:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 System.out.print(" masukan jumlah org : ");
                 org = in.nextInt();
                 tujuan = (String) ((ArrayList) Wisata.get(wst)).get(0);
@@ -189,6 +193,8 @@ class Pesan {
                 tw = harga * org;
                 break;
             case 1:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 System.out.print(" masukan jumlah org : ");
                 org = in.nextInt();
                 tujuan = (String) ((ArrayList) Wisata.get(wst)).get(0);
@@ -197,6 +203,8 @@ class Pesan {
                 tw = harga * org;
                 break;
             case 2:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 System.out.print(" masukan jumlah org : ");
                 org = in.nextInt();
                 tujuan = (String) ((ArrayList) Wisata.get(wst)).get(0);
@@ -223,21 +231,23 @@ class Pesan {
         tagihan1 = (int) (tw - dsc);
         System.out.println("\nRincian perjalanan Wisata anda");
         System.out.println("----------------------------------");
+        System.out.println("NomorTransaksi   : " + nt);
         System.out.println("Perjalanan       : " + tujuan);
         System.out.println("Lama perjalanan  : " + lama);
         System.out.println("jumlah pembelian : " + org + " Kursi");
         System.out.println("Harga            : Rp." + harga + ",-/org");
         System.out.println("Total harga      : Rp." + tw + ",-");
 
-        String sql = "INSERT INTO rinciandana(`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?)";
+        String sql = "INSERT INTO rinciandana(`NomorTransaksi`,`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?,?)";
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, tujuan);
-            stat.setString(2, lama);
-            stat.setInt(3, org);
-            stat.setInt(4, harga);
-            stat.setInt(5, tw);
-            stat.setDouble(6, dsc);
+            stat.setString(1, nt);
+            stat.setString(2, tujuan);
+            stat.setString(3, lama);
+            stat.setInt(4, org);
+            stat.setInt(5, harga);
+            stat.setInt(6, tw);
+            stat.setDouble(7, dsc);
             stat.execute();
         } catch (Exception e) {
         }
@@ -247,6 +257,8 @@ class Pesan {
     void ziarah() {
         switch (zrh) {
             case 0:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 System.out.print(" masukan jumlah org : ");
                 org = in.nextInt();
                 tujuan = (String) ((ArrayList) Ziarah.get(zrh)).get(0);
@@ -255,6 +267,8 @@ class Pesan {
                 tz = harga * org;
                 break;
             case 1:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 System.out.print(" masukan jumlah org : ");
                 org = in.nextInt();
                 tujuan = (String) ((ArrayList) Ziarah.get(zrh)).get(0);
@@ -263,6 +277,8 @@ class Pesan {
                 tz = harga * org;
                 break;
             case 2:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 System.out.print(" masukan jumlah org : ");
                 org = in.nextInt();
                 tujuan = (String) ((ArrayList) Ziarah.get(zrh)).get(0);
@@ -289,21 +305,23 @@ class Pesan {
         tagihan2 = (int) (tz - dsc);
         System.out.println("\nRincian perjalanan Ziarah anda");
         System.out.println("----------------------------------");
+        System.out.println("NomorTransaksi   : " + nt);
         System.out.println("Perjalanan       : " + tujuan);
         System.out.println("Lama perjalanan  : " + lama);
         System.out.println("jumlah pembelian : " + org + " Kursi");
         System.out.println("Harga            : Rp." + harga + ",-/org");
         System.out.println("Total harga      : Rp." + tz + ",-");
 
-        String sql = "INSERT INTO rinciandana(`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?)";
+        String sql = "INSERT INTO rinciandana(`NomorTransaksi`,`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?,?)";
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, tujuan);
-            stat.setString(2, lama);
-            stat.setInt(3, org);
-            stat.setInt(4, harga);
-            stat.setInt(5, tz);
-            stat.setDouble(6, dsc);
+            stat.setString(1, nt);
+            stat.setString(2, tujuan);
+            stat.setString(3, lama);
+            stat.setInt(4, org);
+            stat.setInt(5, harga);
+            stat.setInt(6, tz);
+            stat.setDouble(7, dsc);
             stat.execute();
         } catch (Exception e) {
         }
@@ -313,22 +331,32 @@ class Pesan {
     void custom() {
         switch (ctm) {
             case 0:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 tujuan = (String) ((ArrayList) WisataHarian.get(ctm)).get(0);
                 harga = Integer.parseInt((String) ((ArrayList) WisataHarian.get(ctm)).get(1));
                 break;
             case 1:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 tujuan = (String) ((ArrayList) WisataHarian.get(ctm)).get(0);
                 harga = Integer.parseInt((String) ((ArrayList) WisataHarian.get(ctm)).get(1));
                 break;
             case 2:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 tujuan = (String) ((ArrayList) WisataHarian.get(ctm)).get(0);
                 harga = Integer.parseInt((String) ((ArrayList) WisataHarian.get(ctm)).get(1));
                 break;
             case 3:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 tujuan = (String) ((ArrayList) WisataHarian.get(ctm)).get(0);
                 harga = Integer.parseInt((String) ((ArrayList) WisataHarian.get(ctm)).get(1));
                 break;
             case 4:
+                System.out.print("Nomor Transaksi : ");
+                nt = in.next();
                 tujuan = (String) ((ArrayList) WisataHarian.get(ctm)).get(0);
                 harga = Integer.parseInt((String) ((ArrayList) WisataHarian.get(ctm)).get(1));
                 break;
@@ -373,21 +401,23 @@ class Pesan {
         tagihan3 = (int) (tc - dsc);
         System.out.println("\nRincian Daily Tour anda");
         System.out.println("----------------------------------");
+        System.out.println("NomorTransaksi   : " + nt);
         System.out.println("Perjalanan       : " + tujuan);
         System.out.println("Lama perjalanan  : " + hari);
         System.out.println("jumlah pembelian : " + org + " Kursi");
         System.out.println("Harga            : Rp." + harga + ",-/hari");
         System.out.println("Total Pembayaran : Rp." + tc + ",-");
 
-        String sql = "INSERT INTO rinciandana(`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?)";
+        String sql = "INSERT INTO rinciandana(`NomorTransaksi`,`Perjalanan`,`Lama Perjalanan`,`Jumlah Pembelian`,`Harga`, `Total Harga`, `Diskon`) value(?,?,?,?,?,?,?)";
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, tujuan);
-            stat.setInt(2, hari);
-            stat.setInt(3, org);
-            stat.setInt(4, harga);
-            stat.setInt(5, tc);
-            stat.setDouble(6, dsc);
+            stat.setString(1, nt);
+            stat.setString(2, tujuan);
+            stat.setInt(3, hari);
+            stat.setInt(4, org);
+            stat.setInt(5, harga);
+            stat.setInt(6, tc);
+            stat.setDouble(7, dsc);
             stat.execute();
         } catch (Exception e) {
         }
@@ -408,8 +438,11 @@ class Pesan {
             String nt = in.next();
             System.out.print("Masukkan nama anda : ");
             String data = in.next();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");  
+            Date date = new Date();
             System.out.println("\nNomor Transaksi " + nt + "\n");
             System.out.println("\nAtas nama " + data + "\n");
+            System.out.println("\nTanggal Transaksi " + date + "\n");
             System.out.print("Metode Pembayaran [Cash/Transfer] : ");
             String pembayaran = in.next();
             if (pembayaran.equalsIgnoreCase("CASH") || pembayaran.equalsIgnoreCase("C") || pembayaran.equals("1")) {
@@ -439,13 +472,14 @@ class Pesan {
                 metode = true;
             }
             
-            String sql = "INSERT INTO struk(`NomorTransaksi`,`Nama`,`Saldo`,`SisaCash`) value(?,?,?,?)";
+            String sql = "INSERT INTO struk(`NomorTransaksi`,`Nama`,`Tanggal`,`Saldo`,`SisaCash`) value(?,?,?,?,?)";
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
             stat.setString(1, nt);
             stat.setString(2, data);
-            stat.setInt(3, uang);
-            stat.setInt(4, sisa);
+            stat.setString(3, date.toString());
+            stat.setInt(4, uang);
+            stat.setInt(5, sisa);
             stat.execute();
         } catch (Exception e) {
         }
@@ -455,6 +489,8 @@ class Pesan {
 }
 
 public class Tour_and_Travel {
+    
+        
 
     public static void main(String[] args) {
         Pesan pesan = new Pesan();
@@ -490,11 +526,10 @@ public class Tour_and_Travel {
             }
             System.out.println();
         }
-//        Date Tanggal = new Date();
-//        SimpleDateFormat tgl;
-//        tgl = new SimpleDateFormat("E,dd/MMM/yy hh:mm:ss a");
-//        
-//
+       
+        SimpleDateFormat tgl;
+        tgl = new SimpleDateFormat("E,dd/MMM/yy hh:mm:ss a");
+        
 //        for (int i = 1; i <= 56; i++) {
 //            System.out.print("_");
 //        }
